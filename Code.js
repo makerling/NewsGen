@@ -5,6 +5,8 @@ how to setup clasp (google apps script) in VSCode instructions
 https://yagisanatode.com/2019/04/01/working-with-google-apps-script-in-visual-studio-code-using-clasp/
 */
 
+var sourceId = []
+
 function createFilesInFolder() {
   //This checks existence then creates the folder and gets ID of folder
   var folder = DriveApp.getFoldersByName("NewsGen");
@@ -28,5 +30,17 @@ function createFilesInFolder() {
     var fileJson = Drive.Files.insert(resource)
     var fileId = fileJson.id
     Logger.log("fileId is: " + fileId)
+    sourceId.push(fileId); 
   }
+}
+
+/**
+ * Creates a trigger for when a spreadsheet opens.
+ */
+function createSpreadsheetOpenTrigger() {
+  var ss = SpreadsheetApp.openById(sourceId[0]);
+  ScriptApp.newTrigger('myFunction')
+      .forSpreadsheet(ss)
+      .onOpen()
+      .create();
 }
